@@ -1,0 +1,261 @@
+<?xml version="1.0" ?>
+<robot name="k12" xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+<xacro:property name="body_color" value="Gazebo/Grey" />
+
+<gazebo reference="base_link">
+  <material>${body_color}</material>
+  <mu1>0.5</mu1>
+  <mu2>0.5</mu2>
+  <self_collide>false</self_collide>
+  <gravity>true</gravity>
+</gazebo>
+
+<gazebo reference="left_front_1">
+  <material>${body_color}</material>
+  <mu1>0.8</mu1>
+  <mu2>0.8</mu2>
+  <kp>100000</kp>
+  <kd>0.6</kd>
+  <self_collide>false</self_collide>
+</gazebo>
+
+<gazebo reference="left_back_1">
+  <material>${body_color}</material>
+  <mu1>0.8</mu1>
+  <mu2>0.8</mu2>
+  <kp>100000</kp>
+  <kd>0.6</kd>
+  <self_collide>false</self_collide>
+</gazebo>
+
+<gazebo reference="right_back_1">
+  <material>${body_color}</material>
+  <mu1>0.8</mu1>
+  <mu2>0.8</mu2>
+  <kp>100000</kp>
+  <kd>0.6</kd>
+  <self_collide>false</self_collide>
+</gazebo>
+
+<gazebo reference="right_front_1">
+  <material>${body_color}</material>
+  <mu1>0.8</mu1>
+  <mu2>0.8</mu2>
+  <kp>100000</kp>
+  <kd>0.6</kd>
+  <self_collide>false</self_collide>
+</gazebo>
+
+<gazebo>
+    <!--
+      Publish the four continuous wheel joints to /joint_states.
+      Without this, robot_state_publisher only publishes fixed sensor frames
+      and RViz RobotModel cannot resolve the wheel links.
+    -->
+    <plugin name="gazebo_ros_joint_state_publisher"
+            filename="libgazebo_ros_joint_state_publisher.so">
+        <update_rate>50</update_rate>
+        <joint_name>revolute_17</joint_name>
+        <joint_name>revolute_18</joint_name>
+        <joint_name>revolute_19</joint_name>
+        <joint_name>revolute_20</joint_name>
+    </plugin>
+</gazebo>
+
+<gazebo reference="lidar_1">
+  <material>${body_color}</material>
+  <mu1>0.5</mu1>
+  <mu2>0.5</mu2>
+  <self_collide>false</self_collide>
+</gazebo>
+
+<gazebo reference="cam_1">
+  <material>${body_color}</material>
+  <mu1>0.5</mu1>
+  <mu2>0.5</mu2>
+  <self_collide>false</self_collide>
+</gazebo>
+
+<gazebo reference="imu_1">
+  <material>${body_color}</material>
+  <mu1>0.5</mu1>
+  <mu2>0.5</mu2>
+  <self_collide>false</self_collide>
+</gazebo>
+
+<gazebo reference="gps_1">
+  <material>${body_color}</material>
+  <mu1>0.5</mu1>
+  <mu2>0.5</mu2>
+  <self_collide>false</self_collide>
+</gazebo>
+
+
+
+
+
+
+
+<gazebo>
+    <!--
+      Four-wheel skid-steer controller.
+      The physical wheel positions are:
+        left side:  revolute_19 (front), revolute_20 (rear)
+        right side: revolute_18 (front), revolute_17 (rear)
+    -->
+    <plugin name="diff_drive" filename="libgazebo_ros_diff_drive.so">
+        <num_wheel_pairs>2</num_wheel_pairs>
+
+        <left_joint>revolute_19</left_joint>
+        <right_joint>revolute_18</right_joint>
+
+        <left_joint>revolute_20</left_joint>
+        <right_joint>revolute_17</right_joint>
+
+        <command_topic>cmd_vel</command_topic>
+        <odometry_topic>odom</odometry_topic>
+
+        <wheel_separation>0.71</wheel_separation>
+        <wheel_separation>0.71</wheel_separation>
+
+        <wheel_diameter>0.40</wheel_diameter>
+        <wheel_diameter>0.40</wheel_diameter>
+
+        <max_wheel_torque>120.0</max_wheel_torque>
+        <max_wheel_acceleration>4.0</max_wheel_acceleration>
+
+        <odometry_frame>odom</odometry_frame>
+        <robot_base_frame>base_link</robot_base_frame>
+        <!-- Use Gazebo world odometry (1) for stable simulated SLAM during skid-steer turns. -->
+        <odometry_source>1</odometry_source>
+
+        <ros>
+          <!-- Direct teleop/Nav2 command path. -->
+          <remapping>cmd_vel:=/cmd_vel</remapping>
+          <remapping>odom:=/odom</remapping>
+        </ros>
+
+        <publish_odom>true</publish_odom>
+        <publish_odom_tf>true</publish_odom_tf>
+        <!-- robot_state_publisher owns wheel link TF from /joint_states. -->
+        <publish_wheel_tf>false</publish_wheel_tf>
+    </plugin>
+</gazebo>
+
+
+<gazebo reference="lidar_1">
+  <sensor name="velodyne-VLP16" type="ray">
+    <always_on>true</always_on>
+    <pose>0 0 0 0 0 0</pose>
+    <visualize>false</visualize>
+    <enable_metrics>false</enable_metrics>
+    <update_rate>10</update_rate>
+    <ray>
+      <scan>
+        <horizontal>
+          <samples>512</samples>
+          <resolution>1</resolution>
+          <min_angle>-3.14159</min_angle>
+          <max_angle>3.14159</max_angle>
+        </horizontal>
+        <vertical>
+          <samples>16</samples>
+          <resolution>1</resolution>
+          <min_angle>-0.261799</min_angle>
+          <max_angle>0.261799</max_angle>
+        </vertical>
+      </scan>
+      <range>
+        <min>0.10</min>
+        <max>100.0</max>
+        <resolution>0.01</resolution>
+      </range>
+      <noise>
+        <type>gaussian</type>
+        <mean>0.0</mean>
+        <stddev>0.01</stddev>
+      </noise>
+    </ray>
+
+    <plugin name="lidar_plugin" filename="libgazebo_ros_ray_sensor.so">
+      <ros>
+        <remapping>~/out:=/velodyne_points</remapping>
+      </ros>
+      <output_type>sensor_msgs/PointCloud2</output_type>
+      <frameName>lidar_1</frameName>
+    </plugin>
+  </sensor>
+</gazebo>
+
+
+
+<gazebo reference="imu_1">
+  <sensor name="imu_sensor" type="imu">
+    <always_on>true</always_on>
+    <update_rate>500.0</update_rate>
+    <visualize>false</visualize>
+    <imu>
+      <angular_velocity>
+        <x><noise type="gaussian"><mean>0.0</mean><stddev>0.0002</stddev></noise></x>
+        <y><noise type="gaussian"><mean>0.0</mean><stddev>0.0002</stddev></noise></y>
+        <z><noise type="gaussian"><mean>0.0</mean><stddev>0.0002</stddev></noise></z>
+      </angular_velocity>
+      <linear_acceleration>
+        <x><noise type="gaussian"><mean>0.0</mean><stddev>0.0004</stddev></noise></x>
+        <y><noise type="gaussian"><mean>0.0</mean><stddev>0.0004</stddev></noise></y>
+        <z><noise type="gaussian"><mean>0.0</mean><stddev>0.0004</stddev></noise></z>
+      </linear_acceleration>
+    </imu>
+    <plugin name="imu_plugin" filename="libgazebo_ros_imu_sensor.so">
+      <ros>
+        <remapping>~/out:=/imu/data</remapping>
+      </ros>
+      <frameName>imu_1</frameName>
+    </plugin>
+  </sensor>
+</gazebo>
+
+
+
+<gazebo reference="cam_1">
+  <sensor name="depth_camera" type="depth">
+    <always_on>true</always_on>
+    <update_rate>30</update_rate>
+    <visualize>true</visualize>
+    <!-- Keep sensor pose aligned with cam_1 TF to avoid depth cloud tilt/ghosting. -->
+    <pose>0 0 0 0 0 0</pose>
+
+    <camera>
+      <horizontal_fov>1.047</horizontal_fov>
+      <image>
+        <width>640</width>
+        <height>480</height>
+        <format>R8G8B8</format>
+      </image>
+      <clip>
+        <near>0.1</near>
+        <far>12.0</far>
+      </clip>
+    </camera>
+
+    <plugin name="depth_camera_plugin" filename="libgazebo_ros_camera.so">
+      <ros>
+        <namespace>/camera</namespace>
+        <remapping>image_raw:=rgb/image_raw</remapping>
+        <remapping>depth/image_raw:=depth/image_raw</remapping>
+        <remapping>camera_info:=camera_info</remapping>
+      </ros>
+      <frame_name>cam_1_optical</frame_name>
+      <!-- Keep enough range for a natural live camera view while still bounding depth output. -->
+      <min_depth>0.12</min_depth>
+      <max_depth>10.0</max_depth>
+      <pointCloudCutoff>0.12</pointCloudCutoff>
+      <pointCloudCutoffMax>10.0</pointCloudCutoffMax>
+    </plugin>
+  </sensor>
+</gazebo>
+
+
+
+</robot>

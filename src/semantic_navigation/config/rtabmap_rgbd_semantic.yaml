@@ -1,0 +1,133 @@
+semantic_cloud_generator:
+  ros__parameters:
+    semantic_points_topic: /semantic/points
+    obstacle_points_topic: /semantic/navigation_obstacles
+    semantic_map_points_topic: /semantic/map_points
+    obstacle_map_points_topic: /semantic/map_obstacles
+    min_depth_m: 0.12
+    max_depth_m: 4.5
+    use_approx_sync: true
+    sync_queue_size: 20
+    sync_slop_sec: 0.04
+    publish_rate_hz: 2.0
+    publish_map_clouds: true
+    map_publish_rate_hz: 1.0
+    map_voxel_size_m: 0.10
+    max_map_points: 20000
+    unknown_label_id: 0
+    obstacle_label_ids: "2,3,4,5,6,7,8,9"
+    colorize_by_semantic_label: true
+    camera_offset_xyz: "0.59,0.0,0.32"
+
+rtabmap:
+  ros__parameters:
+    subscribe_rgb: false
+    subscribe_depth: false
+    subscribe_rgbd: true
+    subscribe_scan: false
+    subscribe_scan_cloud: false
+    subscribe_odom_info: false
+    approx_sync: true
+    odom_sensor_sync: false
+    approx_sync_max_interval: 0.03
+    sync_queue_size: 40
+    qos_image: 2
+    qos_camera_info: 2
+    qos_odom: 1
+    frame_id: base_link
+    map_frame_id: map
+    odom_frame_id: odom
+    publish_tf: true
+    publish_tf_map: true
+    wait_for_transform: 0.5
+    wait_for_transform_duration: 0.5
+    map_always_update: true
+    map_empty_ray_tracing: true
+    # Detection and Processing
+    "Rtabmap/DetectionRate": "1.0"
+    "Rtabmap/TimeThr": "0"
+    "Rtabmap/ImageDecimation": "3"
+    "Rtabmap/MemoryThr": "0"
+    # Memory Management
+    "Mem/IncrementalMemory": "true"
+    "Mem/RehearsalSimilarity": "0.65"
+    "Mem/UseOdomFeatures": "true"
+    "Mem/STMSize": "30"
+    "Mem/DepthCompressionFormat": ".png"
+    # Motion Estimation
+    "RGBD/AngularUpdate": "0.30"
+    "RGBD/LinearUpdate": "0.25"
+    "RGBD/ForceOdom3DoF": "true"
+    "Odom/AlignWithGround": "false"
+    "RGBD/CreateOccupancyGrid": "true"
+    "RGBD/NeighborLinkRefining": "true"
+    "RGBD/OptimizeFromGraphEnd": "false"
+    "RGBD/OptimizeMaxError": "1.0"
+    "RGBD/ProximityBySpace": "true"
+    "RGBD/ProximityByTime": "false"
+    "RGBD/LocalRadius": "3.0"
+    "RGBD/ProximityMaxGraphDepth": "30"
+    "RGBD/ProximityPathMaxNeighbors": "1"
+    "RGBD/LoopClosureReextractFeatures": "true"
+    # Visual Features
+    "Vis/FeatureType": "1"
+    "Vis/MinInliers": "25"
+    "Vis/InlierDistance": "0.06"
+    "Vis/MaxDepth": "4.5"
+    "Kp/MaxFeatures": "300"
+    "Kp/TuneForMotion": "true"
+    "Kp/DetectorStrategy": "1"
+    # Optimization
+    "Optimizer/Strategy": "1"
+    "Optimizer/GravitySigma": "0"
+    "Optimizer/Robust": "false"
+    "Optimizer/Iterations": "30"
+    # Grid/Occupancy Map
+    "Grid/FromDepth": "true"
+    "Grid/RayTracing": "true"
+    "Grid/3D": "false"
+    "Grid/CellSize": "0.10"
+    "Grid/DepthDecimation": "6"
+    "Grid/RangeMin": "0.30"
+    "Grid/RangeMax": "4.0"
+    "Grid/MapFrameProjection": "false"
+    "Grid/NormalsSegmentation": "true"
+    "Grid/FlatObstacleDetected": "false"
+    "Grid/MinClusterSize": "35"
+    "Grid/ClusterRadius": "0.18"
+    "Grid/NormalK": "30"
+    "Grid/MaxGroundAngle": "35"
+    "Grid/MinObstacleHeight": "0.25"
+    "Grid/MaxGroundHeight": "0.12"
+    "Grid/MaxObstacleHeight": "1.4"
+    "Grid/NoiseFilteringRadius": "0.28"
+    "Grid/NoiseFilteringMinNeighbors": "18"
+    "GridGlobal/MaxNodes": "0"
+    "GridGlobal/UpdateError": "0.01"
+    # Point Cloud Processing
+    "Cloud/Decimation": "4"
+    "Cloud/MaxDepth": "4.5"
+    "Cloud/MinDepth": "0.15"
+    "Cloud/VoxelSize": "0.15"
+    "Cloud/MaxPoints": "0"
+    "Reg/Force3DoF": "true"
+    # Database/Persistence
+    "Db/SQLite3InMemory": "false"
+    "SQLITE_SYNCHRONOUS": "0"
+
+rtabmap_viz:
+  ros__parameters:
+    subscribe_rgb: false
+    subscribe_depth: false
+    subscribe_rgbd: true
+    subscribe_scan: false
+    subscribe_scan_cloud: false
+    approx_sync: true
+    approx_sync_max_interval: 0.03
+    sync_queue_size: 40
+    qos_image: 2
+    qos_camera_info: 2
+    qos_odom: 1
+    frame_id: base_link
+    map_frame_id: map
+    odom_frame_id: odom

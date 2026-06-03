@@ -1,0 +1,48 @@
+local_costmap:
+  local_costmap:
+    ros__parameters:
+      plugins: ["semantic_obstacle_layer", "inflation_layer"]
+      semantic_obstacle_layer:
+        plugin: "nav2_costmap_2d::ObstacleLayer"
+        observation_sources: semantic_cloud
+        semantic_cloud:
+          topic: /semantic/navigation_obstacles
+          data_type: PointCloud2
+          marking: true
+          clearing: true
+          obstacle_max_range: 8.0
+          obstacle_min_range: 0.12
+          raytrace_max_range: 8.5
+          raytrace_min_range: 0.12
+          max_obstacle_height: 2.0
+          min_obstacle_height: 0.02
+      inflation_layer:
+        plugin: "nav2_costmap_2d::InflationLayer"
+        inflation_radius: 0.35
+        cost_scaling_factor: 3.0
+
+global_costmap:
+  global_costmap:
+    ros__parameters:
+      plugins: ["static_layer", "semantic_obstacle_layer", "inflation_layer"]
+      static_layer:
+        plugin: "nav2_costmap_2d::StaticLayer"
+        map_subscribe_transient_local: true
+      semantic_obstacle_layer:
+        plugin: "nav2_costmap_2d::ObstacleLayer"
+        observation_sources: semantic_cloud
+        semantic_cloud:
+          topic: /semantic/navigation_obstacles
+          data_type: PointCloud2
+          marking: true
+          clearing: true
+          obstacle_max_range: 5.0
+          obstacle_min_range: 0.12
+          raytrace_max_range: 5.5
+          raytrace_min_range: 0.12
+          max_obstacle_height: 2.0
+          min_obstacle_height: 0.02
+      inflation_layer:
+        plugin: "nav2_costmap_2d::InflationLayer"
+        inflation_radius: 0.45
+        cost_scaling_factor: 3.0

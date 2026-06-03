@@ -1,0 +1,13 @@
+rtabmap:
+  ros__parameters:
+    subscribe_rgb: true
+    subscribe_depth: true
+    subscribe_scan_cloud: false
+    approx_sync: false
+    frame_id: base_link
+    rgb_topic: /camera/depth_camera/image_raw
+    depth_topic: /camera/depth_camera/depth/image_raw
+    camera_info_topic: /camera/depth_camera/camera_info
+    Grid/FromDepth: "true"
+    Grid/RayTracing: "true"
+    RGBD/CreateOccupancyGrid: "true"

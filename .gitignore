@@ -1,0 +1,27 @@
+# ROS 2 build artifacts
+build/
+install/
+log/
+
+# Python caches and virtual environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Local IDE/editor files
+.vscode/
+.idea/
+
+# Generated datasets, logs, maps, and databases
+datasets/
+*.bag
+*.db
+*.pgm
+*.yaml.tmp
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db

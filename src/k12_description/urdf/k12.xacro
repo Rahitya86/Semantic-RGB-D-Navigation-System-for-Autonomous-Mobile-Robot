@@ -1,0 +1,280 @@
+<?xml version="1.0" ?>
+<robot name="k12" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:include filename="$(find k12_description)/urdf/materials.xacro" />
+<xacro:include filename="$(find k12_description)/urdf/k12.trans" />
+<xacro:include filename="$(find k12_description)/urdf/k12.gazebo" />
+
+<!--
+  Physics fixes for Gazebo Classic:
+  - Keep STL meshes visual-only.
+  - Use primitive collisions so ODE has stable contact geometry.
+  - Use realistic masses/inertias instead of CAD export values in the hundreds
+    or thousands of kilograms.
+  - The wheel link frame is at the wheel center. Wheel radius is 0.20 m, so
+    base_link z=0 puts the tire bottoms at the world floor.
+-->
+<link name="base_link">
+  <inertial>
+    <origin xyz="0 -0.08 0.30" rpy="0 0 0"/>
+    <mass value="24.0"/>
+    <inertia ixx="0.7202" iyy="2.5352" izz="3.0250" ixy="0.0" iyz="0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find k12_description)/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <visual name="rviz_blue_body_marker">
+    <origin xyz="0 -0.08 0.46" rpy="0 0 0"/>
+    <geometry>
+      <box size="1.05 0.50 0.08"/>
+    </geometry>
+    <material name="rviz_blue"/>
+  </visual>
+  <visual name="rviz_front_direction_marker">
+    <origin xyz="0.42 -0.08 0.52" rpy="0 0 0"/>
+    <geometry>
+      <box size="0.18 0.42 0.045"/>
+    </geometry>
+    <material name="rviz_yellow"/>
+  </visual>
+  <collision>
+    <origin xyz="0 -0.08 0.30" rpy="0 0 0"/>
+    <geometry>
+      <box size="1.10 0.55 0.24"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="left_front_1">
+  <inertial>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <mass value="1.5"/>
+    <inertia ixx="0.01625" iyy="0.03000" izz="0.01625" ixy="0.0" iyz="0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.379738 0.435 -0.2" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find k12_description)/meshes/left_front_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="1.57079632679 0 0"/>
+    <geometry>
+      <cylinder radius="0.20" length="0.10"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="left_back_1">
+  <inertial>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <mass value="1.5"/>
+    <inertia ixx="0.01625" iyy="0.03000" izz="0.01625" ixy="0.0" iyz="0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.373496 0.435 -0.2" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find k12_description)/meshes/left_back_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="1.57079632679 0 0"/>
+    <geometry>
+      <cylinder radius="0.20" length="0.10"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="right_back_1">
+  <inertial>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <mass value="1.5"/>
+    <inertia ixx="0.01625" iyy="0.03000" izz="0.01625" ixy="0.0" iyz="0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.373538 -0.275 -0.2" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find k12_description)/meshes/right_back_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="1.57079632679 0 0"/>
+    <geometry>
+      <cylinder radius="0.20" length="0.10"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="right_front_1">
+  <inertial>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <mass value="1.5"/>
+    <inertia ixx="0.01625" iyy="0.03000" izz="0.01625" ixy="0.0" iyz="0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.372187 -0.275 -0.2" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find k12_description)/meshes/right_front_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="1.57079632679 0 0"/>
+    <geometry>
+      <cylinder radius="0.20" length="0.10"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="lidar_1">
+  <inertial>
+    <origin xyz="0 0 0.025" rpy="0 0 0"/>
+    <mass value="0.30"/>
+    <inertia ixx="0.000484" iyy="0.000484" izz="0.000844" ixy="0.0" iyz="0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.5 0.08 -0.445" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find k12_description)/meshes/lidar_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0.025" rpy="0 0 0"/>
+    <geometry>
+      <cylinder radius="0.075" length="0.05"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="cam_1">
+  <inertial>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <mass value="0.10"/>
+    <inertia ixx="0.000027" iyy="0.000067" izz="0.000067" ixy="0.0" iyz="0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find k12_description)/meshes/cam_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <box size="0.08 0.04 0.04"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="imu_1">
+  <inertial>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <mass value="0.05"/>
+    <inertia ixx="0.000005" iyy="0.000008" izz="0.000010" ixy="0.0" iyz="0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.0 0.08 -0.4" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find k12_description)/meshes/imu_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <box size="0.04 0.03 0.015"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="gps_1">
+  <inertial>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <mass value="0.08"/>
+    <inertia ixx="0.000035" iyy="0.000035" izz="0.000064" ixy="0.0" iyz="0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.45 0.08 -0.4" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find k12_description)/meshes/gps_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <cylinder radius="0.04" length="0.02"/>
+    </geometry>
+  </collision>
+</link>
+
+<joint name="revolute_17" type="continuous">
+  <origin xyz="-0.379738 -0.435 0.2" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="left_front_1"/>
+  <axis xyz="0.0 1.0 0.0"/>
+</joint>
+
+<joint name="revolute_18" type="continuous">
+  <origin xyz="0.373496 -0.435 0.2" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="left_back_1"/>
+  <axis xyz="0.0 1.0 0.0"/>
+</joint>
+
+<joint name="revolute_19" type="continuous">
+  <origin xyz="0.373538 0.275 0.2" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="right_back_1"/>
+  <axis xyz="0.0 1.0 0.0"/>
+</joint>
+
+<joint name="revolute_20" type="continuous">
+  <origin xyz="-0.372187 0.275 0.2" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="right_front_1"/>
+  <axis xyz="0.0 1.0 0.0"/>
+</joint>
+
+<joint name="Rigid 21" type="fixed">
+  <origin xyz="-0.5 -0.08 0.445" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="lidar_1"/>
+</joint>
+
+<joint name="Rigid 22" type="fixed">
+  <origin xyz="0.59 0.0 0.32" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="cam_1"/>
+</joint>
+
+<!-- ROS camera optical convention: x right, y down, z forward. -->
+<link name="cam_1_optical"/>
+<joint name="cam_1_optical_joint" type="fixed">
+  <origin xyz="0 0 0" rpy="-1.57079632679 0 -1.57079632679"/>
+  <parent link="cam_1"/>
+  <child link="cam_1_optical"/>
+</joint>
+
+<joint name="Rigid 23" type="fixed">
+  <origin xyz="0.0 -0.08 0.4" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="imu_1"/>
+</joint>
+
+<joint name="Rigid 24" type="fixed">
+  <origin xyz="0.45 -0.08 0.4" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="gps_1"/>
+</joint>
+
+</robot>

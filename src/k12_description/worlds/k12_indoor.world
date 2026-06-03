@@ -1,0 +1,466 @@
+<?xml version='1.0'?>
+<sdf version='1.6'>
+  <world name='k12_indoor'>
+    <!--
+      Optimized open-top semantic navigation world for Gazebo Classic, ROS2 Humble,
+      Nav2, RTABMap, ORB-SLAM3, depth-camera navigation, and semantic segmentation.
+
+      Important debugging choices:
+      - No ceiling is defined anywhere in this world.
+      - All wall visuals are 1.5 m tall and semi-transparent for top-down debugging.
+      - Furniture and landmarks are inline SDF primitives, avoiding fragile external assets.
+      - Corridors and room entrances are widened to about 3.8 m clear width.
+      - Repeated floor and wall pieces are merged into single static models for performance.
+    -->
+
+    <gravity>0 0 -9.81</gravity>
+    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+    <atmosphere type='adiabatic'/>
+
+    <plugin name='gazebo_ros_state' filename='libgazebo_ros_state.so'>
+      <ros>
+        <namespace>/gazebo</namespace>
+      </ros>
+      <update_rate>10.0</update_rate>
+    </plugin>
+
+    <scene>
+      <ambient>0.72 0.72 0.72 1</ambient>
+      <background>0.86 0.90 0.94 1</background>
+      <shadows>false</shadows>
+      <grid>false</grid>
+    </scene>
+
+    <gui fullscreen='0'>
+      <camera name='top_down_debug_camera'>
+        <pose>8 0 34 0 1.5708 0</pose>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
+      </camera>
+    </gui>
+
+    <physics name='ode_nav2_depth_camera' default='1' type='ode'>
+      <max_step_size>0.004</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+      <real_time_update_rate>250</real_time_update_rate>
+      <ode>
+        <solver>
+          <type>quick</type>
+          <iters>50</iters>
+          <sor>1.3</sor>
+        </solver>
+        <constraints>
+          <cfm>0.0</cfm>
+          <erp>0.2</erp>
+          <contact_max_correcting_vel>80.0</contact_max_correcting_vel>
+          <contact_surface_layer>0.001</contact_surface_layer>
+        </constraints>
+      </ode>
+    </physics>
+
+    <!-- Balanced white lighting: consistent RGB/depth perception, shadows disabled. -->
+    <light name='white_directional_fill' type='directional'>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.80 0.80 0.80 1</diffuse>
+      <specular>0.10 0.10 0.10 1</specular>
+      <direction>-0.35 0.25 -1.0</direction>
+      <cast_shadows>false</cast_shadows>
+    </light>
+    <light name='lobby_white_fill' type='point'>
+      <pose>0 0 4.0 0 0 0</pose>
+      <diffuse>0.65 0.65 0.65 1</diffuse>
+      <specular>0.05 0.05 0.05 1</specular>
+      <attenuation>
+        <range>24</range>
+        <constant>0.6</constant>
+        <linear>0.02</linear>
+        <quadratic>0.002</quadratic>
+      </attenuation>
+      <cast_shadows>false</cast_shadows>
+    </light>
+    <light name='north_rooms_white_fill' type='point'>
+      <pose>5 11 4.0 0 0 0</pose>
+      <diffuse>0.58 0.58 0.58 1</diffuse>
+      <specular>0.05 0.05 0.05 1</specular>
+      <attenuation>
+        <range>22</range>
+        <constant>0.6</constant>
+        <linear>0.025</linear>
+        <quadratic>0.002</quadratic>
+      </attenuation>
+      <cast_shadows>false</cast_shadows>
+    </light>
+    <light name='south_rooms_white_fill' type='point'>
+      <pose>5 -12 4.0 0 0 0</pose>
+      <diffuse>0.58 0.58 0.58 1</diffuse>
+      <specular>0.05 0.05 0.05 1</specular>
+      <attenuation>
+        <range>24</range>
+        <constant>0.6</constant>
+        <linear>0.025</linear>
+        <quadratic>0.002</quadratic>
+      </attenuation>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <!--
+      Floors are merged into one model. Every floor collision has ODE friction tuned
+      for stable quadruped and wheeled robot contact without LiDAR assumptions.
+    -->
+    <model name='floor_network_high_friction'>
+      <static>true</static>
+      <link name='floor_link'>
+        <collision name='floor_lobby_col'>
+          <pose>0 0 -0.02 0 0 0</pose>
+          <geometry><box><size>12 12 0.04</size></box></geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>1.4</mu>
+                <mu2>1.2</mu2>
+                <slip1>0.0</slip1>
+                <slip2>0.0</slip2>
+              </ode>
+            </friction>
+            <contact>
+              <ode>
+                <kp>100000</kp>
+                <kd>1.0</kd>
+                <max_vel>0.1</max_vel>
+                <min_depth>0.001</min_depth>
+              </ode>
+            </contact>
+          </surface>
+        </collision>
+        <visual name='floor_lobby_vis'>
+          <pose>0 0 -0.02 0 0 0</pose>
+          <geometry><box><size>12 12 0.04</size></box></geometry>
+          <material>
+            <ambient>0.58 0.58 0.56 1</ambient>
+            <diffuse>0.70 0.70 0.67 1</diffuse>
+          </material>
+        </visual>
+
+        <collision name='floor_office_col'>
+          <pose>0 12 -0.02 0 0 0</pose>
+          <geometry><box><size>8 8 0.04</size></box></geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>1.4</mu>
+                <mu2>1.2</mu2>
+                <slip1>0.0</slip1>
+                <slip2>0.0</slip2>
+              </ode>
+            </friction>
+            <contact>
+              <ode>
+                <kp>100000</kp>
+                <kd>1.0</kd>
+                <max_vel>0.1</max_vel>
+                <min_depth>0.001</min_depth>
+              </ode>
+            </contact>
+          </surface>
+        </collision>
+        <visual name='floor_office_vis'>
+          <pose>0 12 -0.02 0 0 0</pose>
+          <geometry><box><size>8 8 0.04</size></box></geometry>
+          <material>
+            <ambient>0.45 0.52 0.48 1</ambient>
+            <diffuse>0.56 0.64 0.59 1</diffuse>
+          </material>
+        </visual>
+
+        <collision name='floor_corridor_office_col'>
+          <pose>0 7 -0.02 0 0 0</pose>
+          <geometry><box><size>3.8 2.0 0.04</size></box></geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>1.4</mu>
+                <mu2>1.2</mu2>
+                <slip1>0.0</slip1>
+                <slip2>0.0</slip2>
+              </ode>
+            </friction>
+            <contact>
+              <ode>
+                <kp>100000</kp>
+                <kd>1.0</kd>
+                <max_vel>0.1</max_vel>
+                <min_depth>0.001</min_depth>
+              </ode>
+            </contact>
+          </surface>
+        </collision>
+        <visual name='floor_corridor_office_vis'>
+          <pose>0 7 -0.018 0 0 0</pose>
+          <geometry><box><size>3.8 2.0 0.036</size></box></geometry>
+          <material>
+            <ambient>0.49 0.52 0.50 1</ambient>
+            <diffuse>0.61 0.64 0.62 1</diffuse>
+          </material>
+        </visual>
+
+        <collision name='floor_corridor_semantic_col'>
+          <pose>0 -12 -0.02 0 0 0</pose>
+          <geometry><box><size>3.8 12 0.04</size></box></geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>1.4</mu>
+                <mu2>1.2</mu2>
+                <slip1>0.0</slip1>
+                <slip2>0.0</slip2>
+              </ode>
+            </friction>
+            <contact>
+              <ode>
+                <kp>100000</kp>
+                <kd>1.0</kd>
+                <max_vel>0.1</max_vel>
+                <min_depth>0.001</min_depth>
+              </ode>
+            </contact>
+          </surface>
+        </collision>
+        <visual name='floor_corridor_semantic_vis'>
+          <pose>0 -12 -0.018 0 0 0</pose>
+          <geometry><box><size>3.8 12 0.036</size></box></geometry>
+          <material>
+            <ambient>0.44 0.48 0.55 1</ambient>
+            <diffuse>0.55 0.60 0.69 1</diffuse>
+          </material>
+        </visual>
+
+      </link>
+    </model>
+
+    <!-- Visual-only safe robot spawn patch: keep this 4 m x 4 m area clear. -->
+    <model name='robot_spawn_clear_area_reference'>
+      <static>true</static>
+      <link name='spawn_reference_link'>
+        <visual name='spawn_area_vis'>
+          <pose>0 0 0.003 0 0 0</pose>
+          <geometry><box><size>4 4 0.006</size></box></geometry>
+          <material>
+            <ambient>0.12 0.55 0.35 0.28</ambient>
+            <diffuse>0.12 0.55 0.35 0.28</diffuse>
+          </material>
+          <transparency>0.72</transparency>
+          <cast_shadows>false</cast_shadows>
+        </visual>
+      </link>
+    </model>
+
+    <!--
+      Open-top wall system. Wall height reduced from 2.8 m to 1.5 m.
+      All wall visuals include <transparency>0.5</transparency>.
+    -->
+    <model name='transparent_low_walls_merged'>
+      <static>true</static>
+      <link name='walls_link'>
+        <!-- Lobby: large central spawn area with four widened exits. -->
+        <collision name='wall_lobby_west_col'><pose>-6.075 0 0.75 0 0 0</pose><geometry><box><size>0.15 12 1.5</size></box></geometry></collision>
+        <visual name='wall_lobby_west_vis'><pose>-6.075 0 0.75 0 0 0</pose><geometry><box><size>0.15 12 1.5</size></box></geometry><material><ambient>0.58 0.50 0.46 1</ambient><diffuse>0.72 0.62 0.56 1</diffuse></material><transparency>0.5</transparency><cast_shadows>false</cast_shadows></visual>
+
+        <collision name='wall_lobby_east_north_col'><pose>6.075 4 0.75 0 0 0</pose><geometry><box><size>0.15 4 1.5</size></box></geometry></collision>
+        <visual name='wall_lobby_east_north_vis'><pose>6.075 4 0.75 0 0 0</pose><geometry><box><size>0.15 4 1.5</size></box></geometry><material><ambient>0.58 0.50 0.46 1</ambient><diffuse>0.72 0.62 0.56 1</diffuse></material><transparency>0.5</transparency><cast_shadows>false</cast_shadows></visual>
+        <collision name='wall_lobby_east_center_col'><pose>6.075 0 0.75 0 0 0</pose><geometry><box><size>0.15 4 1.5</size></box></geometry></collision>
+        <visual name='wall_lobby_east_center_vis'><pose>6.075 0 0.75 0 0 0</pose><geometry><box><size>0.15 4 1.5</size></box></geometry><material><ambient>0.58 0.50 0.46 1</ambient><diffuse>0.72 0.62 0.56 1</diffuse></material><transparency>0.5</transparency><cast_shadows>false</cast_shadows></visual>
+        <collision name='wall_lobby_east_south_col'><pose>6.075 -4 0.75 0 0 0</pose><geometry><box><size>0.15 4 1.5</size></box></geometry></collision>
+        <visual name='wall_lobby_east_south_vis'><pose>6.075 -4 0.75 0 0 0</pose><geometry><box><size>0.15 4 1.5</size></box></geometry><material><ambient>0.58 0.50 0.46 1</ambient><diffuse>0.72 0.62 0.56 1</diffuse></material><transparency>0.5</transparency><cast_shadows>false</cast_shadows></visual>
+
+        <collision name='wall_lobby_north_left_col'><pose>-4 6.075 0.75 0 0 0</pose><geometry><box><size>4 0.15 1.5</size></box></geometry></collision>
+        <visual name='wall_lobby_north_left_vis'><pose>-4 6.075 0.75 0 0 0</pose><geometry><box><size>4 0.15 1.5</size></box></geometry><material><ambient>0.58 0.50 0.46 1</ambient><diffuse>0.72 0.62 0.56 1</diffuse></material><transparency>0.5</transparency><cast_shadows>false</cast_shadows></visual>
+        <collision name='wall_lobby_north_right_col'><pose>4 6.075 0.75 0 0 0</pose><geometry><box><size>4 0.15 1.5</size></box></geometry></collision>
+        <visual name='wall_lobby_north_right_vis'><pose>4 6.075 0.75 0 0 0</pose><geometry><box><size>4 0.15 1.5</size></box></geometry><material><ambient>0.58 0.50 0.46 1</ambient><diffuse>0.72 0.62 0.56 1</diffuse></material><transparency>0.5</transparency><cast_shadows>false</cast_shadows></visual>
+        <collision name='wall_lobby_south_left_col'><pose>-4 -6.075 0.75 0 0 0</pose><geometry><box><size>4 0.15 1.5</size></box></geometry></collision>
+        <visual name='wall_lobby_south_left_vis'><pose>-4 -6.075 0.75 0 0 0</pose><geometry><box><size>4 0.15 1.5</size></box></geometry><material><ambient>0.58 0.50 0.46 1</ambient><diffuse>0.72 0.62 0.56 1</diffuse></material><transparency>0.5</transparency><cast_shadows>false</cast_shadows></visual>
+        <collision name='wall_lobby_south_right_col'><pose>4 -6.075 0.75 0 0 0</pose><geometry><box><size>4 0.15 1.5</size></box></geometry></collision>
+        <visual name='wall_lobby_south_right_vis'><pose>4 -6.075 0.75 0 0 0</pose><geometry><box><size>4 0.15 1.5</size></box></geometry><material><ambient>0.58 0.50 0.46 1</ambient><diffuse>0.72 0.62 0.56 1</diffuse></material><transparency>0.5</transparency><cast_shadows>false</cast_shadows></visual>
+
+        <!-- Office. -->
+        <collision name='wall_office_west_col'><pose>-4.075 12 0.75 0 0 0</pose><geometry><box><size>0.15 8 1.5</size></box></geometry></collision>
+        <visual name='wall_office_west_vis'><pose>-4.075 12 0.75 0 0 0</pose><geometry><box><size>0.15 8 1.5</size></box></geometry><material><ambient>0.53 0.58 0.50 1</ambient><diffuse>0.66 0.72 0.62 1</diffuse></material><transparency>0.5</transparency><cast_shadows>false</cast_shadows></visual>
+        <collision name='wall_office_east_col'><pose>4.075 12 0.75 0 0 0</pose><geometry><box><size>0.15 8 1.5</size></box></geometry></collision>
+        <visual name='wall_office_east_vis'><pose>4.075 12 0.75 0 0 0</pose><geometry><box><size>0.15 8 1.5</size></box></geometry><material><ambient>0.53 0.58 0.50 1</ambient><diffuse>0.66 0.72 0.62 1</diffuse></material><transparency>0.5</transparency><cast_shadows>false</cast_shadows></visual>
+        <collision name='wall_office_north_col'><pose>0 16.075 0.75 0 0 0</pose><geometry><box><size>8 0.15 1.5</size></box></geometry></collision>
+        <visual name='wall_office_north_vis'><pose>0 16.075 0.75 0 0 0</pose><geometry><box><size>8 0.15 1.5</size></box></geometry><material><ambient>0.53 0.58 0.50 1</ambient><diffuse>0.66 0.72 0.62 1</diffuse></material><transparency>0.5</transparency><cast_shadows>false</cast_shadows></visual>
+        <collision name='wall_office_south_left_col'><pose>-3 7.925 0.75 0 0 0</pose><geometry><box><size>2 0.15 1.5</size></box></geometry></collision>
+        <visual name='wall_office_south_left_vis'><pose>-3 7.925 0.75 0 0 0</pose><geometry><box><size>2 0.15 1.5</size></box></geometry><material><ambient>0.53 0.58 0.50 1</ambient><diffuse>0.66 0.72 0.62 1</diffuse></material><transparency>0.5</transparency><cast_shadows>false</cast_shadows></visual>
+        <collision name='wall_office_south_right_col'><pose>3 7.925 0.75 0 0 0</pose><geometry><box><size>2 0.15 1.5</size></box></geometry></collision>
+        <visual name='wall_office_south_right_vis'><pose>3 7.925 0.75 0 0 0</pose><geometry><box><size>2 0.15 1.5</size></box></geometry><material><ambient>0.53 0.58 0.50 1</ambient><diffuse>0.66 0.72 0.62 1</diffuse></material><transparency>0.5</transparency><cast_shadows>false</cast_shadows></visual>
+
+        <!-- Corridors: widened and segmented so branch openings remain navigable. -->
+
+        <collision name='wall_corridor_office_west_col'><pose>-1.975 7 0.75 0 0 0</pose><geometry><box><size>0.15 2 1.5</size></box></geometry></collision>
+        <visual name='wall_corridor_office_west_vis'><pose>-1.975 7 0.75 0 0 0</pose><geometry><box><size>0.15 2 1.5</size></box></geometry><material><ambient>0.48 0.52 0.50 1</ambient><diffuse>0.60 0.65 0.62 1</diffuse></material><transparency>0.5</transparency><cast_shadows>false</cast_shadows></visual>
+        <collision name='wall_corridor_office_east_col'><pose>1.975 7 0.75 0 0 0</pose><geometry><box><size>0.15 2 1.5</size></box></geometry></collision>
+        <visual name='wall_corridor_office_east_vis'><pose>1.975 7 0.75 0 0 0</pose><geometry><box><size>0.15 2 1.5</size></box></geometry><material><ambient>0.48 0.52 0.50 1</ambient><diffuse>0.60 0.65 0.62 1</diffuse></material><transparency>0.5</transparency><cast_shadows>false</cast_shadows></visual>
+
+        <collision name='wall_corridor_semantic_west_col'><pose>-1.975 -12 0.75 0 0 0</pose><geometry><box><size>0.15 12 1.5</size></box></geometry></collision>
+        <visual name='wall_corridor_semantic_west_vis'><pose>-1.975 -12 0.75 0 0 0</pose><geometry><box><size>0.15 12 1.5</size></box></geometry><material><ambient>0.45 0.49 0.56 1</ambient><diffuse>0.56 0.61 0.70 1</diffuse></material><transparency>0.5</transparency><cast_shadows>false</cast_shadows></visual>
+        <collision name='wall_corridor_semantic_east_col'><pose>1.975 -12 0.75 0 0 0</pose><geometry><box><size>0.15 12 1.5</size></box></geometry></collision>
+        <visual name='wall_corridor_semantic_east_vis'><pose>1.975 -12 0.75 0 0 0</pose><geometry><box><size>0.15 12 1.5</size></box></geometry><material><ambient>0.45 0.49 0.56 1</ambient><diffuse>0.56 0.61 0.70 1</diffuse></material><transparency>0.5</transparency><cast_shadows>false</cast_shadows></visual>
+        <collision name='wall_corridor_semantic_south_col'><pose>0 -18.075 0.75 0 0 0</pose><geometry><box><size>3.8 0.15 1.5</size></box></geometry></collision>
+        <visual name='wall_corridor_semantic_south_vis'><pose>0 -18.075 0.75 0 0 0</pose><geometry><box><size>3.8 0.15 1.5</size></box></geometry><material><ambient>0.45 0.49 0.56 1</ambient><diffuse>0.56 0.61 0.70 1</diffuse></material><transparency>0.5</transparency><cast_shadows>false</cast_shadows></visual>
+
+      </link>
+    </model>
+
+    <!--
+      Inline semantic furniture and obstacles. Simple primitive collisions are used
+      for performance and reliable availability on clean Gazebo Classic installs.
+      The lobby center remains clear for robot spawning.
+    -->
+    <model name='semantic_furniture_and_obstacles'>
+      <static>true</static>
+      <link name='objects_link'>
+        <!-- Removed primitive semantic objects; will be replaced with real models below -->
+      </link>
+    </model>
+
+    <!-- Semantic furniture and obstacles: real Gazebo Fuel assets -->
+    
+    <!-- LOBBY ZONE: Coffee table, trash can, stool-as-lampstand -->
+    <model name='lobby_cafe_table'>
+      <static>true</static>
+      <pose>4.5 3.8 0 0 0 0</pose>
+      <include>
+        <uri>model://cafe_table</uri>
+      </include>
+    </model>
+
+    <model name='lobby_trash_can'>
+      <static>true</static>
+      <pose>-5.0 -3.5 0 0 0 0</pose>
+      <include>
+        <uri>model://first_2015_trash_can</uri>
+      </include>
+    </model>
+
+    <model name='lobby_small_box'>
+      <static>true</static>
+      <pose>-4.8 3.8 0 0 0 0.2</pose>
+      <include>
+        <uri>model://cardboard_box</uri>
+      </include>
+    </model>
+
+    <model name='lobby_navigation_obstacle_box'>
+      <static>true</static>
+      <pose>2.2 1.2 0 0 0 0.35</pose>
+      <include>
+        <uri>model://cardboard_box</uri>
+      </include>
+    </model>
+
+    <!-- OFFICE ZONE: Desk, office chair, shelf for books, cabinet as computer -->
+    <model name='office_desk_main'>
+      <static>true</static>
+      <pose>-2.8 14.0 0 0 0 0</pose>
+      <include>
+        <uri>model://table</uri>
+      </include>
+    </model>
+
+    <model name='office_chair_main'>
+      <static>true</static>
+      <pose>-2.8 12.5 0 0 0 0</pose>
+      <include>
+        <uri>model://cabinet</uri>
+      </include>
+    </model>
+
+    <model name='office_bookshelf'>
+      <static>true</static>
+      <pose>3.2 13.0 0 0 0 0</pose>
+      <include>
+        <uri>model://bookshelf</uri>
+      </include>
+    </model>
+
+    <model name='office_computer_box'>
+      <static>true</static>
+      <pose>-1.2 14.2 0 0 0 0</pose>
+      <include>
+        <uri>model://wooden_case</uri>
+      </include>
+    </model>
+
+    <model name='office_cabinet_side'>
+      <static>true</static>
+      <pose>3.1 10.2 0 0 0 1.5708</pose>
+      <include>
+        <uri>model://cabinet</uri>
+      </include>
+    </model>
+
+    <model name='office_corridor_navigation_tote'>
+      <static>true</static>
+      <pose>1.25 7.0 0 0 0 1.5708</pose>
+      <include>
+        <uri>model://grey_tote</uri>
+      </include>
+    </model>
+
+    <model name='semantic_corridor_navigation_box'>
+      <static>true</static>
+      <pose>1.20 -10.8 0 0 0 -0.2</pose>
+      <include>
+        <uri>model://cardboard_box</uri>
+      </include>
+    </model>
+
+    <model name='semantic_corridor_tote'>
+      <static>true</static>
+      <pose>-1.15 -16.6 0 0 0 0</pose>
+      <include>
+        <uri>model://grey_tote</uri>
+      </include>
+    </model>
+
+    <!-- Colored obstacle boxes for semantic navigation -->
+    <model name='obstacle_red_box_lobby'>
+      <static>true</static>
+      <pose>4.8 -4.8 0.25 0 0 0</pose>
+      <link name='box_link'>
+        <collision name='red_box_collision'>
+          <geometry><box><size>0.5 0.5 0.5</size></box></geometry>
+        </collision>
+        <visual name='red_box_visual'>
+          <geometry><box><size>0.5 0.5 0.5</size></box></geometry>
+          <material><ambient>0.8 0.1 0.1 1</ambient><diffuse>1.0 0.2 0.2 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name='obstacle_green_box_office'>
+      <static>true</static>
+      <pose>-0.8 13.5 0.25 0 0 0</pose>
+      <link name='box_link'>
+        <collision name='green_box_collision'>
+          <geometry><box><size>0.5 0.5 0.5</size></box></geometry>
+        </collision>
+        <visual name='green_box_visual'>
+          <geometry><box><size>0.5 0.5 0.5</size></box></geometry>
+          <material><ambient>0.1 0.6 0.1 1</ambient><diffuse>0.2 1.0 0.2 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Visual-only semantic landmarks for SLAM, localization, and segmentation cues. -->
+    <model name='visual_semantic_landmarks'>
+      <static>true</static>
+      <link name='landmarks_link'>
+        <visual name='poster_lobby_blue_vis'><pose>-5.98 2.2 1.05 0 0 0</pose><geometry><box><size>0.03 1.0 0.65</size></box></geometry><material><ambient>0.04 0.16 0.68 1</ambient><diffuse>0.05 0.22 0.92 1</diffuse></material><cast_shadows>false</cast_shadows></visual>
+        <visual name='poster_lobby_yellow_vis'><pose>5.98 -4.2 1.00 0 0 0</pose><geometry><box><size>0.03 1.0 0.55</size></box></geometry><material><ambient>0.72 0.58 0.06 1</ambient><diffuse>0.95 0.78 0.08 1</diffuse></material><cast_shadows>false</cast_shadows></visual>
+        <visual name='poster_office_green_vis'><pose>0.5 15.98 1.05 0 0 0</pose><geometry><box><size>1.25 0.03 0.65</size></box></geometry><material><ambient>0.06 0.48 0.24 1</ambient><diffuse>0.08 0.68 0.34 1</diffuse></material><cast_shadows>false</cast_shadows></visual>
+        <visual name='semantic_corridor_stripe_red_vis'><pose>1.88 -8.4 0.9 0 0 0</pose><geometry><box><size>0.025 0.9 0.45</size></box></geometry><material><ambient>0.66 0.04 0.04 1</ambient><diffuse>0.90 0.06 0.06 1</diffuse></material><cast_shadows>false</cast_shadows></visual>
+        <visual name='semantic_corridor_stripe_white_vis'><pose>-1.88 -15.4 0.9 0 0 0</pose><geometry><box><size>0.025 0.9 0.45</size></box></geometry><material><ambient>0.82 0.82 0.78 1</ambient><diffuse>0.96 0.96 0.92 1</diffuse></material><cast_shadows>false</cast_shadows></visual>
+      </link>
+    </model>
+  </world>
+</sdf>
