@@ -50,6 +50,8 @@ snav_ws/                           # Root ROS2 workspace
 **Maintainer:** Rahiitya
 
 **Purpose:** Processes RGB-D camera streams to produce semantic segmentation and object detection products
+<img width="1920" height="1080" alt="Screenshot from 2026-06-03 15-59-15" src="https://github.com/user-attachments/assets/dc6578b0-ab3c-49be-b4b4-69e1b7d6ef8e" />
+
 
 #### Key Nodes:
 
@@ -127,6 +129,8 @@ snav_ws/                           # Root ROS2 workspace
 
 **Purpose:** Fuses RGB-D and semantic segmentation into navigation-ready point clouds and integrates SLAM
 
+<img width="1920" height="1080" alt="Screenshot from 2026-06-03 16-02-08" src="https://github.com/user-attachments/assets/9913bf13-2161-4596-9d2d-0a128cc91d0a" />
+
 #### Key Nodes:
 
 1. **semantic_cloud_generator** (Main)
@@ -164,6 +168,8 @@ snav_ws/                           # Root ROS2 workspace
      - `map_voxel_size_m`: Voxel size for downsampling (default: 0.10m)
      - `max_map_points`: Limit persistent cloud size (default: 100,000 points)
      - `obstacle_label_ids`: Which classes are obstacles (default: 2,3,4,5,6,7,8,9)
+       <img width="1920" height="1080" alt="Screenshot from 2026-06-03 15-59-35" src="https://github.com/user-attachments/assets/347fb0dd-0738-4f84-b322-dfe01ba0ab43" />
+
 
    - **Architecture Highlights:**
      - Uses TF2 to transform points between frames
@@ -180,6 +186,8 @@ snav_ws/                           # Root ROS2 workspace
 
 3. **semantic_goal_resolver.py**
    - Resolves semantic goals (e.g., "go to the red box") into map coordinates
+     <img width="1920" height="1080" alt="Screenshot from 2026-06-03 15-59-50" src="https://github.com/user-attachments/assets/9ac03338-2748-474f-8ebe-5fc34375398a" />
+
 
 #### Launch Files:
 - `semantic_navigation.launch.py` - Core semantic navigation system
