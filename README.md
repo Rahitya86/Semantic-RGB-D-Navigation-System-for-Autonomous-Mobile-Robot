@@ -168,7 +168,7 @@ snav_ws/                           # Root ROS2 workspace
      - `map_voxel_size_m`: Voxel size for downsampling (default: 0.10m)
      - `max_map_points`: Limit persistent cloud size (default: 100,000 points)
      - `obstacle_label_ids`: Which classes are obstacles (default: 2,3,4,5,6,7,8,9)
-       <img width="1920" height="1080" alt="Screenshot from 2026-06-03 15-59-35" src="https://github.com/user-attachments/assets/347fb0dd-0738-4f84-b322-dfe01ba0ab43" />
+<img width="1920" height="1080" alt="Screenshot from 2026-06-03 15-59-35" src="https://github.com/user-attachments/assets/347fb0dd-0738-4f84-b322-dfe01ba0ab43" />
 
 
    - **Architecture Highlights:**
@@ -186,7 +186,7 @@ snav_ws/                           # Root ROS2 workspace
 
 3. **semantic_goal_resolver.py**
    - Resolves semantic goals (e.g., "go to the red box") into map coordinates
-     <img width="1920" height="1080" alt="Screenshot from 2026-06-03 15-59-50" src="https://github.com/user-attachments/assets/9ac03338-2748-474f-8ebe-5fc34375398a" />
+<img width="1920" height="1080" alt="Screenshot from 2026-06-03 15-59-50" src="https://github.com/user-attachments/assets/9ac03338-2748-474f-8ebe-5fc34375398a" />
 
 
 #### Launch Files:
