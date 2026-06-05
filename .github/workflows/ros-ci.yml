@@ -1,0 +1,43 @@
+name: ROS 2 CI
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["main", "master"]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build ROS workspace
+    runs-on: ubuntu-22.04
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup ROS 2 Humble
+        uses: ros-tooling/setup-ros@v0.7
+        with:
+          required-ros-distributions: humble
+
+      - name: Install ROS dependencies
+        uses: ros-tooling/action-ros-ci@v0.4
+        with:
+          package-name: |
+            k12_description
+            semantic_navigation
+            semantic_object_detection
+          target-ros2-distro: humble
+          colcon-defaults: |
+            {
+              "build": {
+                "symlink-install": true
+              },
+              "test": {
+                "event-handlers": ["console_direct+"]
+              }
+            }

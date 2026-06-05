@@ -1,0 +1,12 @@
+Semantic RGB-D Navigation System for Autonomous Mobile Robot
+Copyright 2026 Rahiitya
+
+This project is licensed under the Apache License, Version 2.0, except where
+otherwise noted.
+
+The repository may include third-party ROS, Gazebo, robot description, model,
+mesh, texture, and simulation assets. Those assets remain subject to their
+own upstream licenses, copyright notices, and attribution requirements.
+
+Trademarks, product names, service names, and project names belong to their
+respective owners.

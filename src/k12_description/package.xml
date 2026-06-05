@@ -2,9 +2,9 @@
 <package format="3">
   <name>k12_description</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="vijaykumargorli2003@gmail.com">vijay</maintainer>
-  <license>TODO: License declaration</license>
+  <description>K12 robot description, Gazebo assets, launch files, and RViz configuration.</description>
+  <maintainer email="rahiitya@todo.todo">Rahiitya</maintainer>
+  <license>Apache-2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 

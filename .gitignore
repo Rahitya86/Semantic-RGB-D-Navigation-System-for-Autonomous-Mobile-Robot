@@ -7,20 +7,57 @@ log/
 __pycache__/
 *.py[cod]
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
 .venv/
 venv/
+env/
 
 # Local IDE/editor files
 .vscode/
 .idea/
+*.swp
+*.swo
 
 # Generated datasets, logs, maps, and databases
 datasets/
+data/
+captures/
+recordings/
+rosbags/
 *.bag
+*.bag.active
+*.mcap
 *.db
 *.pgm
+*.pcd
+*.ply
 *.yaml.tmp
 *.log
+*.sqlite
+*.sqlite3
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+id_rsa
+id_ed25519
+secrets/
+credentials/
+
+# Model and experiment outputs
+runs/
+weights/
+checkpoints/
+*.pt
+*.pth
+*.onnx
 
 # OS files
 .DS_Store

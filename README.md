@@ -689,12 +689,37 @@ k12_description/
 
 ---
 
+## Repository Protection
+
+This repository includes project safety files for public GitHub use:
+
+- Apache-2.0 license and project notice
+- Security reporting policy
+- Contribution rules and pull request checklist
+- GitHub CodeQL code scanning workflow
+- ROS 2 CI workflow for pull requests
+- Dependabot monitoring for GitHub Actions and Python dependencies
+- CODEOWNERS review rule for repository-owner review
+- `.gitignore` rules for ROS build outputs, maps, databases, ROS bags, model weights, credentials, and local configuration
+
+Recommended GitHub settings:
+
+- Enable secret scanning and push protection in repository security settings.
+- Protect the default branch and block force pushes.
+- Require pull requests before merging to the default branch.
+- Require CodeQL and ROS 2 CI checks before merging when the workflows are passing.
+- Keep private datasets, real-world maps, credentials, and robot-specific calibration files outside the repository.
+
+---
+
 ## Contact & Contribution
 
 - **Maintainer:** Rahiitya
 - **License:** Apache-2.0
 - **Last Build:** Multiple successful builds logged in `/log/` directory
 - **Latest Build:** `build_2026-05-20_09-24-52/`
+
+See [`LICENSE`](LICENSE), [`NOTICE`](NOTICE), [`SECURITY.md`](SECURITY.md), and [`CONTRIBUTING.md`](CONTRIBUTING.md) for license, attribution, security, and contribution details. Third-party ROS, Gazebo, model, mesh, texture, and simulation assets remain subject to their original upstream licenses and attribution requirements.
 
 ---
 
