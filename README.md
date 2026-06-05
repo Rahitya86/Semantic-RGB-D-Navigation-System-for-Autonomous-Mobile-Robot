@@ -719,7 +719,7 @@ Recommended GitHub settings:
 - **Last Build:** Multiple successful builds logged in `/log/` directory
 - **Latest Build:** `build_2026-05-20_09-24-52/`
 
-See [`LICENSE`](LICENSE), [`NOTICE`](NOTICE), [`SECURITY.md`](SECURITY.md), and [`CONTRIBUTING.md`](CONTRIBUTING.md) for license, attribution, security, and contribution details. Third-party ROS, Gazebo, model, mesh, texture, and simulation assets remain subject to their original upstream licenses and attribution requirements.
+See [`LICENSE`](LICENSE), [`NOTICE`](NOTICE), and [`SECURITY.md`](SECURITY.md) for license, attribution, and security details. Third-party ROS, Gazebo, model, mesh, texture, and simulation assets remain subject to their original upstream licenses and attribution requirements.
 
 ---
 
